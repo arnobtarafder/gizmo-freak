@@ -19,7 +19,7 @@ const UploadProduct = () => {
                 name, price, description
             }),
             headers: {
-                "Content-type": "application/json",
+                "Content-type": "application/json; charset=UTF-8",
             },
         })
             .then(response => response.json())

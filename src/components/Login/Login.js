@@ -8,7 +8,6 @@ const Login = () => {
     const [user, loading, error] = useAuthState(auth)
     let navigate = useNavigate();
     let location = useLocation();
-    let from = location.state?.from?.pathname || "/";
 
     const handleGoogleSignIn = () => {
         signInWithGoogle()
@@ -17,7 +16,23 @@ const Login = () => {
     useEffect(()=>{
         let from = location.state?.from?.pathname || "/";
         if (user) {
-        navigate(from, { replace: true })
+            
+            const url = "http://localhost:5000/login"
+            fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                email: user.email
+            }),
+            headers: {
+                "Content-type": "application/json",
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            localStorage.setItem("accessToken", data.token)
+            navigate(from, { replace: true })
+        })
         }
         },[user])
 
