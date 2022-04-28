@@ -9,23 +9,30 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
-    const [user, loading, error] = useAuthState(auth)
-
+    const [user, loading] = useAuthState(auth);
+    console.log(products);
+    
     useEffect(() => {
         fetch("http://localhost:5000/products")
-            .then(res => res.json())
-            .then(data => setProducts(data))
+        .then(res => res.json())
+        .then(data => setProducts(data))
     }, [])
+    
+        if(loading) {
+            return <p className='text-center'>Loading...</p>
+        }
+        
 
     const handleOrder = (product) => {
-        const {name, price} = product;
-        console.log(product, user.email);
+        const {name, price, photo} = product;
+        console.log(product, photo);
 
         fetch('http://localhost:5000/addOrder', {
             method: 'POST',
             body: JSON.stringify({
                 name,
                 price,
+                photo,
                 email: user.email
             }),
             headers: {
@@ -43,11 +50,12 @@ const Products = () => {
             <ToastContainer />
             <h1>Total Products: {products.length}</h1>
 
-            <div className="row">
+            <div className="row container-fluid">
                 {
                     products.map(pd => (
-                       <div className='col-4 g-4' key={pd._id}>
+                       <div className='col-lg-4 col-md-6 col-sm-12 g-4' key={pd._id}>
                             <div className="card">
+                            <img src={products.photo} className="img-fluid card-img-top" alt="..." />
                             <div className="card-body">
                                 <h5 className="card-title">{pd.name}</h5>
                             </div>
